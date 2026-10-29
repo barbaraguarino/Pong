@@ -54,3 +54,13 @@ Os assets PNG ficam em `sprites/`, divididos em dois grupos:
 Os textos dos sprites de UI estão em português (ex.: `text_pausado`, `text_jogador1_venceu`, `label_recorde`, `label_ranking`). Isso indica as telas previstas: pausa, vitória por jogador, ranking/recorde, nome e avatar do jogador, opções.
 
 Os sprites foram movidos de `sprites/*.png` (raiz) para `sprites/game/` e `sprites/ui/`. Ao carregar imagens, use os caminhos novos.
+
+## Sons
+
+Os sons ficam em `sounds/`, todos originais e sintetizados por código (nenhum arquivo baixado). Veja `sounds/README.md` para saber quando tocar cada um.
+
+- `sounds/music/`: `music_*` (loops) e `jingle_*` (vinhetas que tocam uma vez).
+- `sounds/sfx/game/`: efeitos da partida.
+- `sounds/sfx/ui/`: efeitos de interface (iguais nos dois jogos).
+
+Formato WAV 44,1 kHz, 16 bits. Ao carregar, use esses caminhos.
