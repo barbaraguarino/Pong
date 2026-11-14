@@ -36,7 +36,7 @@ O usuário está usando este projeto para aprender. Por isso:
 
 ## Licença
 
-O projeto é **proprietário e privado**: ninguém pode baixar, copiar, modificar ou usar sem autorização por escrito. Não troque a licença nem adicione dependências ou trechos de código com licença incompatível sem avisar o usuário.
+O projeto é **público** e usa a licença **MIT** (arquivo `LICENSE`). O repositório no GitHub deve permanecer público. Não troque a licença nem adicione dependências ou trechos de código com licença incompatível com a MIT sem avisar o usuário.
 
 ## Estado do projeto
 
