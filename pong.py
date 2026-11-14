@@ -10,6 +10,20 @@ AUMENTO_POR_BATIDA = 20
 VELOCIDADE_MAXIMA = 400
 
 BOLA_PNG = 'sprites/game/ball/ball.png'
+RAQUETE_P1_PNG = 'sprites/game/paddles/paddle_p1.png'
+RAQUETE_P2_PNG = 'sprites/game/paddles/paddle_p2.png'
+LINHA_CENTRAL_PNG = 'sprites/game/court/center_line.png'
+
+MARGEM_RAQUETE = 40
+VELOCIDADE_RAQUETE = 400
+
+class Quadra:
+    def __init__(self):
+        self.linha = Sprite(LINHA_CENTRAL_PNG)
+        self.linha.set_position(LARGURA/2 - self.linha.width/2, ALTURA/2 - self.linha.height/2)
+
+    def desenha(self):
+        self.linha.draw()
 
 class Controle:
     def __init__(self, teclado):
@@ -52,14 +66,45 @@ class Bola:
             self.dir_y = -1
             self.aumenta_velocidade()
 
+    def rebate(self, raquete):
+        if self.sprite.collided(raquete.sprite) and self.dir_x != raquete.lado:
+            self.dir_x = raquete.lado
+            self.aumenta_velocidade()
 
-    def draw(self):
+
+    def desenha(self):
+        self.sprite.draw()
+
+class Raquete:
+    def __init__(self, sprite, lado, tecla_cima, tecla_baixo):
+        self.sprite = Sprite(sprite)
+        self.lado = lado
+        self.tecla_cima = tecla_cima
+        self.tecla_baixo = tecla_baixo
+
+        if lado == 1:
+            x = MARGEM_RAQUETE
+        else:
+            x = LARGURA - MARGEM_RAQUETE - self.sprite.width
+
+        self.sprite.set_position(x, ALTURA/2 - self.sprite.height/2)
+
+    def mover(self, teclado):
+        if teclado.key_pressed(self.tecla_cima) and self.sprite.y > 0:
+            self.sprite.move_y(-VELOCIDADE_RAQUETE)
+        if teclado.key_pressed(self.tecla_baixo) and self.sprite.height < ALTURA:
+            self.sprite.move_y(VELOCIDADE_RAQUETE)
+
+    def desenha(self):
         self.sprite.draw()
 
 class Pong:
     def __init__(self):
         self.janela = Window(LARGURA, ALTURA, "Pong")
+        self.quadra = Quadra()
         self.bola = Bola()
+        self.raquete_1 = Raquete(RAQUETE_P1_PNG, 1, 'w', 's')
+        self.raquete_2 = Raquete(RAQUETE_P2_PNG, -1, 'up', 'down')
         self.controle = Controle(self.janela.keyboard)
 
     def fechar(self):
@@ -69,9 +114,16 @@ class Pong:
     def run(self):
         while True:
             self.fechar()
-            self.bola.draw()
+            self.quadra.desenha()
+            self.raquete_1.desenha()
+            self.raquete_2.desenha()
+            self.bola.desenha()
             self.bola.mover()
+            self.raquete_1.mover(self.janela.keyboard)
+            self.raquete_2.mover(self.janela.keyboard)
             self.bola.quica()
+            self.bola.rebate(self.raquete_1)
+            self.bola.rebate(self.raquete_2)
             self.janela.update()
 
 Pong().run()
