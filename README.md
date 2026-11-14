@@ -37,7 +37,7 @@ Este é um projeto de estudo: todo o código é escrito pela autora, como prepar
 
 ## Como instalar e rodar
 
-1. Clone o repositório (ele é privado, então é preciso ter acesso).
+1. Clone o repositório (ele é público).
 2. Crie e ative um ambiente virtual:
    ```bash
    python3 -m venv .venv
@@ -94,4 +94,4 @@ Cada funcionalidade tem uma **issue** no GitHub ligada à sua branch, e os commi
 
 ## Licença
 
-Projeto **proprietário e privado**. Todos os direitos reservados: ninguém pode baixar, copiar, modificar ou usar sem autorização por escrito. Veja o arquivo [`LICENSE`](LICENSE).
+Projeto público, sob a licença **MIT**. Veja o arquivo [`LICENSE`](LICENSE).
