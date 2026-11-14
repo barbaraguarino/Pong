@@ -6,8 +6,8 @@ ALTURA = 800
 
 class Bola:
     def __init__(self):
-        self.bola = Sprite('sprites/game/ball.png')
-        self.bola.set_position(LARGURA/2 - self.bola.height, ALTURA/2 - self.bola.width)
+        self.bola = Sprite('sprites/game/ball/ball.png')
+        self.bola.set_position(LARGURA/2 - self.bola.width/2, ALTURA/2 - self.bola.height/2)
 
     def draw(self):
         self.bola.draw()
