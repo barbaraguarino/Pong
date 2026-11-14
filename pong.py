@@ -4,6 +4,11 @@ from PPlay.sprite import Sprite
 
 DT_MAXIMO = 1/30
 
+FPS_X = 10
+FPS_Y = 10
+FPS_TAMANHO = 20
+FPS_COR = (255, 255, 0)
+
 LARGURA = 1200
 ALTURA = 800
 
@@ -121,6 +126,10 @@ class Pong:
     def delta_time(self):
         return min(self.janela.delta_time(), DT_MAXIMO)
 
+    def desenha_fps(self):
+        fps = int(self.janela.get_fps())
+        self.janela.draw_text(f"FPS: {fps}", FPS_X, FPS_Y, FPS_TAMANHO, FPS_COR)
+
     def fechar(self):
         if self.controle.fechar():
             self.janela.close()
@@ -144,6 +153,7 @@ class Pong:
             self.bola.rebate(self.raquete_1)
             self.bola.rebate(self.raquete_2)
 
+            self.desenha_fps()
             self.janela.update()
 
 Pong().run()
