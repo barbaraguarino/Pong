@@ -2,6 +2,8 @@ import random
 from PPlay.window import Window
 from PPlay.sprite import Sprite
 
+DT_MAXIMO = 1/30
+
 LARGURA = 1200
 ALTURA = 800
 
@@ -53,9 +55,9 @@ class Bola:
         self.dir_x = random.choice([-1, 1])
         self.dir_y = random.choice([-1, 1])
 
-    def mover(self):
-        self.sprite.move_x(self.velocidade * self.dir_x)
-        self.sprite.move_y(self.velocidade * self.dir_y)
+    def mover(self, dt):
+        self.sprite.x += self.velocidade * self.dir_x * dt
+        self.sprite.y += self.velocidade * self.dir_y * dt
 
     def aumenta_velocidade(self):
         self.velocidade += AUMENTO_POR_BATIDA
@@ -97,8 +99,8 @@ class Raquete:
 
         self.sprite.set_position(x, ALTURA/2 - self.sprite.height/2)
 
-    def mover(self, direcao):
-        self.sprite.move_y(VELOCIDADE_RAQUETE * direcao)
+    def mover(self, direcao, dt):
+        self.sprite.y += VELOCIDADE_RAQUETE * direcao * dt
         if self.sprite.y < 0:
             self.sprite.y = 0
         if self.sprite.y + self.sprite.height > ALTURA:
@@ -116,6 +118,9 @@ class Pong:
         self.raquete_2 = Raquete(RAQUETE_P2_PNG, -1)
         self.controle = Controle(self.janela.keyboard)
 
+    def delta_time(self):
+        return min(self.janela.delta_time(), DT_MAXIMO)
+
     def fechar(self):
         if self.controle.fechar():
             self.janela.close()
@@ -129,9 +134,11 @@ class Pong:
             self.raquete_2.desenha()
             self.bola.desenha()
 
-            self.bola.mover()
-            self.raquete_1.mover(self.controle.direcao(TECLAS_P1))
-            self.raquete_2.mover(self.controle.direcao(TECLAS_P2))
+            dt = self.delta_time()
+
+            self.bola.mover(dt)
+            self.raquete_1.mover(self.controle.direcao(TECLAS_P1), dt)
+            self.raquete_2.mover(self.controle.direcao(TECLAS_P2), dt)
 
             self.bola.quica()
             self.bola.rebate(self.raquete_1)
