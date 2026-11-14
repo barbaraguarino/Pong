@@ -82,13 +82,12 @@ class Bola:
             self.dir_x = raquete.lado
             self.aumenta_velocidade()
 
-
     def desenha(self):
         self.sprite.draw()
 
 class Raquete:
-    def __init__(self, sprite, lado):
-        self.sprite = Sprite(sprite)
+    def __init__(self, raquete_png, lado):
+        self.sprite = Sprite(raquete_png)
         self.lado = lado
 
         if lado == 1:
