@@ -124,16 +124,20 @@ class Pong:
     def run(self):
         while True:
             self.fechar()
+
             self.quadra.desenha()
             self.raquete_1.desenha()
             self.raquete_2.desenha()
             self.bola.desenha()
+
             self.bola.mover()
             self.raquete_1.mover(self.controle.direcao(TECLAS_P1))
             self.raquete_2.mover(self.controle.direcao(TECLAS_P2))
+
             self.bola.quica()
             self.bola.rebate(self.raquete_1)
             self.bola.rebate(self.raquete_2)
+
             self.janela.update()
 
 Pong().run()
