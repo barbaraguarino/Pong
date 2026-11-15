@@ -129,11 +129,16 @@ class Raquete:
 class Pong:
     def __init__(self):
         self.janela = Window(LARGURA, ALTURA, "Pong")
+
         self.quadra = Quadra()
         self.bola = Bola()
+        self.controle = Controle(self.janela.keyboard)
         self.raquete_1 = Raquete(RAQUETE_P1_PNG, 1)
         self.raquete_2 = Raquete(RAQUETE_P2_PNG, -1)
-        self.controle = Controle(self.janela.keyboard)
+
+        self.pontos_1 = 0
+        self.pontos_2 = 0
+        self.estado = True
 
     def delta_time(self):
         return min(self.janela.delta_time(), DT_MAXIMO)
