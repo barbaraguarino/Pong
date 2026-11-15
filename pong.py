@@ -27,6 +27,10 @@ VELOCIDADE_RAQUETE = 400
 TECLAS_P1 = ('w', 's')
 TECLAS_P2 = ('up', 'down')
 
+ESPERANDO = 'esperando'
+JOGANDO = 'jogando'
+TECLA_SAQUE = 'SPACE'
+
 class Quadra:
     def __init__(self):
         self.linha = Sprite(LINHA_CENTRAL_PNG)
@@ -38,6 +42,9 @@ class Quadra:
 class Controle:
     def __init__(self, teclado):
         self.teclado = teclado
+
+    def sacar(self):
+        return self.teclado.key_down(TECLA_SAQUE)
 
     def fechar(self):
         return self.teclado.key_pressed("ESC")
@@ -70,13 +77,6 @@ class Bola:
             self.velocidade = VELOCIDADE_MAXIMA
 
     def quica(self):
-        if self.sprite.x <= 0:
-            self.dir_x = 1
-            self.aumenta_velocidade()
-        if self.sprite.x + self.sprite.width >= LARGURA:
-            self.dir_x = -1
-            self.aumenta_velocidade()
-
         if self.sprite.y <= 0:
             self.dir_y = 1
             self.aumenta_velocidade()
