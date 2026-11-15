@@ -67,6 +67,18 @@ class Bola:
         self.dir_x = random.choice([-1, 1])
         self.dir_y = random.choice([-1, 1])
 
+    def centralizar(self):
+        self.sprite.set_position(LARGURA / 2 - self.sprite.width / 2, ALTURA / 2 - self.sprite.height / 2)
+        self.velocidade = VELOCIDADE_INICIAL
+
+    def gol(self):
+        if self.sprite.x <= 0:
+            print("Gol")
+            self.centralizar()
+        if self.sprite.x + self.sprite.width >= LARGURA:
+            print("Gol")
+            self.centralizar()
+
     def mover(self, dt):
         self.sprite.x += self.velocidade * self.dir_x * dt
         self.sprite.y += self.velocidade * self.dir_y * dt
@@ -152,6 +164,8 @@ class Pong:
             self.bola.quica()
             self.bola.rebate(self.raquete_1)
             self.bola.rebate(self.raquete_2)
+
+            self.bola.gol()
 
             self.desenha_fps()
             self.janela.update()
