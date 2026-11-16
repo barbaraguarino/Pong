@@ -71,7 +71,10 @@ class Controle:
 class Bola:
     def __init__(self):
         self.sprite = Sprite(BOLA_PNG)
-        self.centralizar(random.choice([ESQUERDA, DIREITA]))
+        self.velocidade = VELOCIDADE_INICIAL
+        self.dir_x = random.choice([ESQUERDA, DIREITA])
+        self.dir_y = random.choice([-1, 1])
+        self.centralizar(self.dir_x)
 
     def centralizar(self, dir_x):
         centraliza(self.sprite)
