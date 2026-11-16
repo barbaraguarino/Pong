@@ -14,6 +14,10 @@ FONTE_SIMBOLOS = {':': 'colon', ',': 'comma', '-': 'dash', '!': 'exclaim',
                   '.': 'period', '+': 'plus', '?': 'question'}
 FONTE_ESPACAMENTO = 4
 
+AVISO_TEXTO = 'APERTE ESPACO PARA SACAR'
+AVISO_MARGEM_SUPERIOR = 30
+AVISO_PISCA = 0.5
+
 LARGURA = 1200
 ALTURA = 800
 
@@ -78,6 +82,20 @@ class TextoSprite:
     def desenha(self):
         for letra in self.letras.values():
             letra.draw()
+
+
+class Aviso:
+    def __init__(self):
+        self.texto = TextoSprite(AVISO_TEXTO)
+        self.texto.set_position(LARGURA/2 - self.texto.largura/2, AVISO_MARGEM_SUPERIOR)
+        self.tempo = 0
+
+    def atualiza(self, dt):
+        self.tempo = (self.tempo + dt) % (2 * AVISO_PISCA)
+
+    def desenha(self):
+        if self.tempo < AVISO_PISCA:
+            self.texto.desenha()
 
 
 class Controle:
@@ -201,6 +219,9 @@ class Partida:
         elif self.estado == JOGANDO:
             self.joga(dt)
 
+    def esperando_saque(self):
+        return self.estado == ESPERANDO
+
     def espera_saque(self):
         if self.controle.sacar():
             self.estado = JOGANDO
@@ -239,6 +260,7 @@ class Pong:
         self.janela = Window(LARGURA, ALTURA, "Pong")
         self.controle = Controle(self.janela.keyboard)
         self.partida = Partida(self.controle)
+        self.aviso = Aviso()
 
     def delta_time(self):
         return min(self.janela.delta_time(), DT_MAXIMO)
@@ -254,8 +276,12 @@ class Pong:
     def run(self):
         while True:
             self.fechar()
+            dt = self.delta_time()
             self.partida.desenha()
-            self.partida.atualiza(self.delta_time())
+            if self.partida.esperando_saque():
+                self.aviso.atualiza(dt)
+                self.aviso.desenha()
+            self.partida.atualiza(dt)
             self.desenha_fps()
             self.janela.update()
 
