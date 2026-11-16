@@ -29,7 +29,13 @@ ALTURA = 800
 ESQUERDA = -1
 DIREITA = 1
 
-VELOCIDADE_INICIAL = 100
+VENCEDOR_PNG = {
+    ESQUERDA: 'sprites/ui/headings/text_jogador1_venceu.png',
+    DIREITA: 'sprites/ui/headings/text_jogador2_venceu.png',
+}
+VENCEDOR_Y = 300
+
+VELOCIDADE_INICIAL = 150
 AUMENTO_POR_BATIDA = 20
 VELOCIDADE_MAXIMA = 400
 
@@ -49,6 +55,8 @@ TECLA_FECHAR = 'ESC'
 ESPERANDO = 'esperando'
 JOGANDO = 'jogando'
 
+PONTOS_PARA_VENCER = 12
+FIM_DA_PARTIDA = 'fim_da_partida'
 
 def centraliza(sprite):
     sprite.set_position(LARGURA/2 - sprite.width/2, ALTURA/2 - sprite.height/2)
@@ -122,6 +130,18 @@ class Aviso:
     def desenha(self):
         if self.tempo < AVISO_PISCA:
             self.texto.desenha()
+
+
+class AvisoVencedor:
+    def __init__(self):
+        self.sprites = {}
+        for lado, caminho in VENCEDOR_PNG.items():
+            sprite = Sprite(caminho)
+            sprite.set_position(LARGURA/2 - sprite.width/2, VENCEDOR_Y)
+            self.sprites[lado] = sprite
+
+    def desenha(self, lado):
+        self.sprites[lado].draw()
 
 
 class Controle:
@@ -219,6 +239,9 @@ class Jogador:
     def marca_ponto(self):
         self.pontos += 1
 
+    def zera(self):
+        self.pontos = 0
+
     def desenha(self):
         self.raquete.desenha()
 
@@ -234,18 +257,37 @@ class Partida:
         }
         self.placar = Placar()
         self.estado = ESPERANDO
+        self.vencedor = None
 
     def atualiza(self, dt):
-        for jogador in self.jogadores.values():
-            jogador.mover(self.controle, dt)
+        if self.estado != FIM_DA_PARTIDA:
+            for jogador in self.jogadores.values():
+                jogador.mover(self.controle, dt)
 
         if self.estado == ESPERANDO:
             self.espera_saque()
         elif self.estado == JOGANDO:
             self.joga(dt)
+        elif self.estado == FIM_DA_PARTIDA:
+            self.espera_reinicio()
 
     def esperando_saque(self):
         return self.estado == ESPERANDO
+
+    def terminou(self):
+        return self.estado == FIM_DA_PARTIDA
+
+    def espera_reinicio(self):
+        if self.controle.sacar():
+            self.reinicia()
+
+    def reinicia(self):
+        for jogador in self.jogadores.values():
+            jogador.zera()
+            self.placar.mostra(jogador.lado, 0)
+        self.vencedor = None
+        self.bola.centralizar(random.choice([ESQUERDA, DIREITA]))
+        self.estado = ESPERANDO
 
     def espera_saque(self):
         if self.controle.sacar():
@@ -266,7 +308,11 @@ class Partida:
         jogador.marca_ponto()
         self.placar.mostra(jogador.lado, jogador.pontos)
         self.bola.centralizar(self.direcao_do_saque(lado))
-        self.estado = ESPERANDO
+        if jogador.pontos >= PONTOS_PARA_VENCER:
+            self.vencedor = jogador.lado
+            self.estado = FIM_DA_PARTIDA
+        else:
+            self.estado = ESPERANDO
 
     def adversario_de(self, lado):
         return self.jogadores[-lado]
@@ -289,6 +335,7 @@ class Pong:
         self.controle = Controle(self.janela.keyboard)
         self.partida = Partida(self.controle)
         self.aviso = Aviso()
+        self.aviso_vencedor = AvisoVencedor()
 
     def delta_time(self):
         return min(self.janela.delta_time(), DT_MAXIMO)
@@ -309,6 +356,8 @@ class Pong:
             if self.partida.esperando_saque():
                 self.aviso.atualiza(dt)
                 self.aviso.desenha()
+            if self.partida.terminou():
+                self.aviso_vencedor.desenha(self.partida.vencedor)
             self.partida.atualiza(dt)
             self.desenha_fps()
             self.janela.update()
