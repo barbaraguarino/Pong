@@ -192,7 +192,8 @@ class Partida:
     def adversario_de(self, lado):
         return self.jogadores[-lado]
 
-    def direcao_do_saque(self, lado_do_gol):
+    @staticmethod
+    def direcao_do_saque(lado_do_gol):
         return lado_do_gol
 
     def desenha(self):
