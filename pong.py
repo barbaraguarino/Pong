@@ -31,6 +31,9 @@ ESPERANDO = 'esperando'
 JOGANDO = 'jogando'
 TECLA_SAQUE = 'SPACE'
 
+SAQUE_P1 = -1
+SAQUE_P2 = 1
+
 class Quadra:
     def __init__(self):
         self.linha = Sprite(LINHA_CENTRAL_PNG)
@@ -61,23 +64,20 @@ class Bola:
 
     def __init__(self):
         self.sprite = Sprite(BOLA_PNG)
+        self.centralizar(random.choice([-1, 1]))
+
+    def centralizar(self, dir_x):
         self.sprite.set_position(LARGURA/2 - self.sprite.width/2, ALTURA/2 - self.sprite.height/2)
-
         self.velocidade = VELOCIDADE_INICIAL
-        self.dir_x = random.choice([-1, 1])
+        self.dir_x = dir_x
         self.dir_y = random.choice([-1, 1])
-
-    def centralizar(self):
-        self.sprite.set_position(LARGURA / 2 - self.sprite.width / 2, ALTURA / 2 - self.sprite.height / 2)
-        self.velocidade = VELOCIDADE_INICIAL
 
     def gol(self):
         if self.sprite.x <= 0:
-            print("Gol")
-            self.centralizar()
+            return 2
         if self.sprite.x + self.sprite.width >= LARGURA:
-            print("Gol")
-            self.centralizar()
+            return 1
+        return 0
 
     def mover(self, dt):
         self.sprite.x += self.velocidade * self.dir_x * dt
@@ -138,7 +138,7 @@ class Pong:
 
         self.pontos_1 = 0
         self.pontos_2 = 0
-        self.estado = True
+        self.estado = ESPERANDO
 
     def delta_time(self):
         return min(self.janela.delta_time(), DT_MAXIMO)
@@ -146,6 +146,17 @@ class Pong:
     def desenha_fps(self):
         fps = int(self.janela.get_fps())
         self.janela.draw_text(f"FPS: {fps}", FPS_X, FPS_Y, FPS_TAMANHO, FPS_COR)
+
+    def marca_ponto(self):
+        quem = self.bola.gol()
+        if quem == 1:
+            self.pontos_1 += 1
+            self.bola.centralizar(SAQUE_P2)
+            self.estado = ESPERANDO
+        elif quem == 2:
+            self.pontos_2 += 1
+            self.bola.centralizar(SAQUE_P1)
+            self.estado = ESPERANDO
 
     def fechar(self):
         if self.controle.fechar():
@@ -162,15 +173,18 @@ class Pong:
 
             dt = self.delta_time()
 
-            self.bola.mover(dt)
             self.raquete_1.mover(self.controle.direcao(TECLAS_P1), dt)
             self.raquete_2.mover(self.controle.direcao(TECLAS_P2), dt)
 
-            self.bola.quica()
-            self.bola.rebate(self.raquete_1)
-            self.bola.rebate(self.raquete_2)
-
-            self.bola.gol()
+            if self.estado == ESPERANDO:
+                if self.controle.sacar():
+                    self.estado = JOGANDO
+            elif self.estado == JOGANDO:
+                self.bola.mover(dt)
+                self.bola.quica()
+                self.bola.rebate(self.raquete_1)
+                self.bola.rebate(self.raquete_2)
+                self.marca_ponto()
 
             self.desenha_fps()
             self.janela.update()
