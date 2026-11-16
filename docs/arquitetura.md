@@ -8,10 +8,11 @@ O jogo está em `pong.py`. As constantes ficam no topo e as classes vêm depois.
 | `Partida` | As regras: o estado (`ESPERANDO` ou `JOGANDO`), o saque, o gol e quem pontua. |
 | `Jogador` | Raquete, teclas, lado (`ESQUERDA` ou `DIREITA`) e pontos. |
 | `Raquete` | Move a raquete sem sair da tela. |
-| `Bola` | Move, quica no topo e na base, rebate nas raquetes e informa por qual lado saiu (`saida()`). Não sabe nada de jogadores. |
+| `Bola` | Move, quica no topo e na base, rebate nas raquetes (só elas aceleram a bola) e informa por qual lado saiu (`saida()`). Não sabe nada de jogadores. |
 | `Controle` | Lê o teclado: a direção de cada jogador, o saque e fechar. |
 | `Quadra` | Desenha a linha central. |
-| `TextoSprite` | Escreve um texto com as letras de `sprites/ui/font/`. |
+| `TextoSprite` | Escreve um texto com sprites, um por caractere. Por padrão usa as letras de `sprites/ui/font/`; recebe outra função de caminho para os dígitos. |
+| `Placar` | Mostra os pontos de cada jogador com os dígitos de `sprites/game/digits/`, um número de cada lado da quadra. |
 | `Aviso` | O aviso piscando "APERTE ESPACO PARA SACAR". |
 
 ## Decisões
