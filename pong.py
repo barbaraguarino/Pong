@@ -167,10 +167,8 @@ class Bola:
     def quica(self):
         if self.sprite.y <= 0:
             self.dir_y = 1
-            self.aumenta_velocidade()
         if self.sprite.y + self.sprite.height >= ALTURA:
             self.dir_y = -1
-            self.aumenta_velocidade()
 
     def rebate(self, raquete):
         if self.sprite.collided(raquete.sprite) and self.dir_x == raquete.lado:
