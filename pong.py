@@ -9,6 +9,11 @@ FPS_Y = 10
 FPS_TAMANHO = 20
 FPS_COR = (255, 255, 0)
 
+FONTE_PASTA = 'sprites/ui/font'
+FONTE_SIMBOLOS = {':': 'colon', ',': 'comma', '-': 'dash', '!': 'exclaim',
+                  '.': 'period', '+': 'plus', '?': 'question'}
+FONTE_ESPACAMENTO = 4
+
 LARGURA = 1200
 ALTURA = 800
 
@@ -47,6 +52,32 @@ class Quadra:
 
     def desenha(self):
         self.linha.draw()
+
+
+def caminho_da_letra(letra):
+    nome = FONTE_SIMBOLOS.get(letra, letra)
+    return f'{FONTE_PASTA}/char_{nome}.png'
+
+
+class TextoSprite:
+    def __init__(self, texto):
+        texto = texto.upper()
+        self.letras = {}
+        for i, letra in enumerate(texto):
+            if letra != ' ':
+                self.letras[i] = Sprite(caminho_da_letra(letra))
+
+        primeira = next(iter(self.letras.values()))
+        self.passo = primeira.width + FONTE_ESPACAMENTO
+        self.largura = len(texto) * self.passo - FONTE_ESPACAMENTO
+
+    def set_position(self, x, y):
+        for i, letra in self.letras.items():
+            letra.set_position(x + i * self.passo, y)
+
+    def desenha(self):
+        for letra in self.letras.values():
+            letra.draw()
 
 
 class Controle:
