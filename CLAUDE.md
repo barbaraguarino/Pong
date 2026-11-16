@@ -34,6 +34,7 @@ Regras de trabalho para o Claude neste repositório. Explicações sobre o proje
 - Commits pequenos, com um único assunto cada. A mensagem diz o que mudou. Não junte assuntos diferentes num commit.
 - Git Flow: `main`, `develop`, `feature/*`, `release/*`, `hotfix/*`. Nunca desenvolva direto em `main` nem em `develop`.
 - Cada funcionalidade tem sua branch a partir de `develop`, com nome legível (ex.: `feature/placar-com-sprites`), ligada a uma issue.
+- Crie a branch pela issue, para ela aparecer ligada no campo "Development": `gh issue develop N --name feature/... --base develop --checkout`. Uma branch criada de outro jeito não pode ser ligada depois.
 
 ## Issues
 
@@ -48,6 +49,6 @@ Regras de trabalho para o Claude neste repositório. Explicações sobre o proje
 2. Com o sim, confira se não ficou nada sem commit nem sem push. Se ficou, avise e pare.
 3. Abra o PR contra `develop` com as seções "Closes #N", "O que mudou" e "Pendente".
 4. Mescle com merge commit, a não ser que a usuária diga que ela mesma mescla.
-5. Feche a issue com um comentário apontando o PR. O `Closes` não fecha sozinho porque a base é `develop`.
+5. Feche a issue com um comentário apontando o PR e a branch. O `Closes` não fecha nem liga sozinho porque a base é `develop`.
 6. Comente nas issues afetadas pelo que mudou.
 7. Escreva o **Resumo para o gerente**: o que fiz, o que aprendi, dúvidas e o que falta.
