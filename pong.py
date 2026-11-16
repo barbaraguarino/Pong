@@ -155,14 +155,14 @@ class Partida:
         self.controle = controle
         self.quadra = Quadra()
         self.bola = Bola()
-        self.jogadores = [
-            Jogador(RAQUETE_P1_PNG, TECLAS_P1, ESQUERDA),
-            Jogador(RAQUETE_P2_PNG, TECLAS_P2, DIREITA),
-        ]
+        self.jogadores = {
+            ESQUERDA: Jogador(RAQUETE_P1_PNG, TECLAS_P1, ESQUERDA),
+            DIREITA: Jogador(RAQUETE_P2_PNG, TECLAS_P2, DIREITA),
+        }
         self.estado = ESPERANDO
 
     def atualiza(self, dt):
-        for jogador in self.jogadores:
+        for jogador in self.jogadores.values():
             jogador.mover(self.controle, dt)
 
         if self.estado == ESPERANDO:
@@ -177,7 +177,7 @@ class Partida:
     def joga(self, dt):
         self.bola.mover(dt)
         self.bola.quica()
-        for jogador in self.jogadores:
+        for jogador in self.jogadores.values():
             self.bola.rebate(jogador.raquete)
         self.confere_gol()
 
@@ -190,16 +190,14 @@ class Partida:
         self.estado = ESPERANDO
 
     def adversario_de(self, lado):
-        for jogador in self.jogadores:
-            if jogador.lado != lado:
-                return jogador
+        return self.jogadores[-lado]
 
     def direcao_do_saque(self, lado_do_gol):
         return lado_do_gol
 
     def desenha(self):
         self.quadra.desenha()
-        for jogador in self.jogadores:
+        for jogador in self.jogadores.values():
             jogador.desenha()
         self.bola.desenha()
 
