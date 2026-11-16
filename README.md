@@ -26,14 +26,14 @@ Este é um projeto de estudo: todo o código é escrito pela autora, como prepar
 
 | Tecla | Função |
 |---|---|
-| `ESPAÇO` | Reiniciar o saque depois de um gol |
-| `ESC` | Voltar ao menu / pausar |
+| `ESPAÇO` | Sacar (no início e depois de cada gol) |
+| `ESC` | Fechar o jogo (no futuro: voltar ao menu / pausar) |
 
 ## Tecnologias
 
 - Python 3
 - [PPlay](https://www2.ic.uff.br/pplay/): biblioteca usada na disciplina, já incluída na pasta `PPlay/`
-- [Pygame](https://www.pygame.org/): usado internamente pelo PPlay
+- [pygame-ce](https://pyga.me/): usado internamente pelo PPlay
 
 ## Como instalar e rodar
 
@@ -43,16 +43,20 @@ Este é um projeto de estudo: todo o código é escrito pela autora, como prepar
    python3 -m venv .venv
    source .venv/bin/activate
    ```
-3. Instale o Pygame:
+3. Instale as dependências (o PPlay usa o `pygame-ce`):
    ```bash
-   pip install pygame
+   pip install -r requirements.txt
    ```
-4. Execute o jogo: o arquivo principal ainda será criado (o comando será informado aqui quando existir).
+4. Execute o jogo:
+   ```bash
+   python pong.py
+   ```
 
 ## Estrutura do projeto
 
 ```
 pong/
+├── pong.py       o jogo
 ├── PPlay/        biblioteca PPlay
 ├── sprites/
 │   ├── game/     quadra, bola, raquetes, dígitos do placar, efeitos
@@ -60,11 +64,12 @@ pong/
 ├── sounds/
 │   ├── music/    músicas em loop e vinhetas (jingles)
 │   └── sfx/      efeitos sonoros do jogo e da interface
-├── CLAUDE.md     regras de trabalho do projeto
+├── docs/         documentação (arquitetura do código, sprites)
+├── CLAUDE.md     regras de trabalho para o Claude
 └── LICENSE
 ```
 
-O código-fonte seguirá a POO, com classes para as partes do jogo (por exemplo: bola, raquete, placar, IA, menu, ranking). A divisão exata será definida durante o desenvolvimento.
+O código segue a POO, com uma classe para cada parte do jogo. A divisão atual está em [`docs/arquitetura.md`](docs/arquitetura.md), e a descrição dos sprites em [`docs/sprites.md`](docs/sprites.md).
 
 Os sons estão documentados em [`sounds/README.md`](sounds/README.md), com a indicação de quando tocar cada um.
 
