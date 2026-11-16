@@ -14,6 +14,11 @@ FONTE_SIMBOLOS = {':': 'colon', ',': 'comma', '-': 'dash', '!': 'exclaim',
                   '.': 'period', '+': 'plus', '?': 'question'}
 FONTE_ESPACAMENTO = 4
 
+DIGITOS_PASTA = 'sprites/game/digits'
+PLACAR_Y = 90
+PLACAR_DISTANCIA_CENTRO = 150
+PLACAR_ESPACAMENTO = 6
+
 AVISO_TEXTO = 'APERTE ESPACO PARA SACAR'
 AVISO_MARGEM_SUPERIOR = 30
 AVISO_PISCA = 0.5
@@ -63,17 +68,21 @@ def caminho_da_letra(letra):
     return f'{FONTE_PASTA}/char_{nome}.png'
 
 
+def caminho_do_digito(digito):
+    return f'{DIGITOS_PASTA}/digit_{digito}.png'
+
+
 class TextoSprite:
-    def __init__(self, texto):
+    def __init__(self, texto, caminho=caminho_da_letra, espacamento=FONTE_ESPACAMENTO):
         texto = texto.upper()
         self.letras = {}
         for i, letra in enumerate(texto):
             if letra != ' ':
-                self.letras[i] = Sprite(caminho_da_letra(letra))
+                self.letras[i] = Sprite(caminho(letra))
 
         primeira = next(iter(self.letras.values()))
-        self.passo = primeira.width + FONTE_ESPACAMENTO
-        self.largura = len(texto) * self.passo - FONTE_ESPACAMENTO
+        self.passo = primeira.width + espacamento
+        self.largura = len(texto) * self.passo - espacamento
 
     def set_position(self, x, y):
         for i, letra in self.letras.items():
@@ -82,6 +91,23 @@ class TextoSprite:
     def desenha(self):
         for letra in self.letras.values():
             letra.draw()
+
+
+class Placar:
+    def __init__(self):
+        self.numeros = {}
+        self.mostra(ESQUERDA, 0)
+        self.mostra(DIREITA, 0)
+
+    def mostra(self, lado, pontos):
+        numero = TextoSprite(str(pontos), caminho_do_digito, PLACAR_ESPACAMENTO)
+        centro = LARGURA/2 + lado * PLACAR_DISTANCIA_CENTRO
+        numero.set_position(centro - numero.largura/2, PLACAR_Y)
+        self.numeros[lado] = numero
+
+    def desenha(self):
+        for numero in self.numeros.values():
+            numero.desenha()
 
 
 class Aviso:
@@ -208,6 +234,7 @@ class Partida:
             ESQUERDA: Jogador(RAQUETE_P1_PNG, TECLAS_P1, ESQUERDA),
             DIREITA: Jogador(RAQUETE_P2_PNG, TECLAS_P2, DIREITA),
         }
+        self.placar = Placar()
         self.estado = ESPERANDO
 
     def atualiza(self, dt):
@@ -237,7 +264,9 @@ class Partida:
         lado = self.bola.saida()
         if lado is None:
             return
-        self.adversario_de(lado).marca_ponto()
+        jogador = self.adversario_de(lado)
+        jogador.marca_ponto()
+        self.placar.mostra(jogador.lado, jogador.pontos)
         self.bola.centralizar(self.direcao_do_saque(lado))
         self.estado = ESPERANDO
 
@@ -250,6 +279,7 @@ class Partida:
 
     def desenha(self):
         self.quadra.desenha()
+        self.placar.desenha()
         for jogador in self.jogadores.values():
             jogador.desenha()
         self.bola.desenha()
