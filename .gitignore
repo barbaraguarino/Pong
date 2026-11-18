@@ -48,3 +48,6 @@ $RECYCLE.BIN/
 
 # macOS (caso alguém use)
 .DS_Store
+
+# Prompt do chat gerente (uso pessoal)
+prompt-gerente.md
